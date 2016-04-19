@@ -47,7 +47,7 @@ def correct_for_atmo(raw_data, gas_tar, gas_ref, plot_result=True):
     corrected_data[gas_tar] = pad.Series(raw_data[gas_tar] - atmo_constant,
                                      index=raw_data.index)
     if plot_result:
-        plt.figure()
+        plt.figure(figsize=(12,8))
         raw_data[gas_tar].plot()
         corrected_data[gas_tar].plot(style='r')
         plt.legend(['%s measured' %  gas_tar,
@@ -125,7 +125,7 @@ def add_ratio(df, gas_tar, gas_ref, plot_result=True):
     new_df[new_column_name] = pad.Series(df[gas_tar] / df[gas_ref],
            index=df.index)
     if plot_result:
-        plt.figure()
+        plt.figure(figsize=(12,8))
         new_df[new_column_name].plot()
         plt.ylabel(new_column_name)
     return new_df
@@ -134,7 +134,7 @@ def add_ratio(df, gas_tar, gas_ref, plot_result=True):
 def plot_acorr(dfcol, maxlags, newfig=False):
     """ plot the autocorrelation function """
     if newfig:
-        plt.figure()
+        plt.figure(figsize=(12,8))
     bins, values,_,_ = plt.acorr(dfcol - dfcol.mean(), maxlags=maxlags, usevlines=False)
     plt.xlim([0, bins[-1]])
 
@@ -142,7 +142,7 @@ def plot_acorr(dfcol, maxlags, newfig=False):
 def harmo_analysis(df, gas_tar, gas_ref, maxlags=1000):
     # TO be continued
     new_column_name= '%s/%s'%(gas_tar, gas_ref)
-    plt.figure()
+    plt.figure(figsize=(12,8))
     plt.subplot(211)                                     
     plot_acorr(df[new_column_name], maxlags)
 
