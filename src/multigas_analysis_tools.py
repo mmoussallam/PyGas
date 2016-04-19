@@ -11,6 +11,10 @@ import numpy as np
 from scipy.stats import linregress
 import pandas as pad
 import matplotlib.pyplot as plt
+try:
+    import seaborn
+except:
+    pass
 
 def get_raw_data(filepath):
     """ open the csv, parse the values and return
@@ -125,14 +129,22 @@ def add_ratio(df, gas_tar, gas_ref, plot_result=True):
         new_df[new_column_name].plot()
         plt.ylabel(new_column_name)
     return new_df
-    
 
-def harmo_analysis(df, gas_tar, gas_ref):
+
+def plot_acorr(dfcol, maxlags, newfig=False):
+    """ plot the autocorrelation function """
+    if newfig:
+        plt.figure()
+    bins, values,_,_ = plt.acorr(dfcol - dfcol.mean(), maxlags=maxlags, usevlines=False)
+    plt.xlim([0, bins[-1]])
+
+
+def harmo_analysis(df, gas_tar, gas_ref, maxlags=1000):
     # TO be continued
     new_column_name= '%s/%s'%(gas_tar, gas_ref)
     plt.figure()
     plt.subplot(211)                                     
-    plt.acorr(df[new_column_name], maxlags=1000, usevlines=False)
+    plot_acorr(df[new_column_name], maxlags)
 
     # ok now cwt
     from scipy import signal
