@@ -18,20 +18,21 @@ except:
 
 # Replace with your local dir
 #inputfiledir = 'C:\Users\Manu\workspace\PyGas\datas'
-inputfiledir = '/home/manu/workspace/PyGas/datas'
+inputfiledir = '/Users/manumouss/workspace/PyGas/datas'
+#inputfiledir = '/home/manu/workspace/PyGas/datas'
 
 filename= '09_February_Villarrica.xlsx'
 filepath = os.path.join(inputfiledir, filename)
+df = pd.read_excel(filepath, 'Sheet1')
+df = multools.get_raw_data_xls(filepath,   decimal_time_name='Decimal time')
 
-	
-df = pd.ExcelFile(filepath).parse('Sheet1')
+multools.plot_acorr(df['Flux ton/day'], 500, newfig=True, index=df.index)
 
-multools.plot_acorr(df['Flux ton/day'], 500)
+
 
 filename= '17_January_2016_Villarrica.xlsx'
 filepath = os.path.join(inputfiledir, filename)
 
-	
-df = pd.ExcelFile(filepath).parse('Sheet1')
-multools.plot_acorr(df['Temp'].dropna(), 5000, newfig=True)
+df = multools.get_raw_data_xls(filepath)
+multools.plot_acorr(df['Temp'].dropna(), 5000, newfig=True, index=df.index)
 

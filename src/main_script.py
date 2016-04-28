@@ -12,7 +12,7 @@ import multigas_analysis_tools as multools
 
 # NOW we need the path to your data
 #inputfiledir = 'C:\Users\Manu\workspace\PyGas\datas'
-inputfiledir = '/home/manu/workspace/PyGas/datas'
+inputfiledir = '/Users/manumouss/workspace/PyGas/datas'
 csvname = 'Sabancaya_For_Python-Script.csv'
 filepath = os.path.join(inputfiledir, csvname)
 

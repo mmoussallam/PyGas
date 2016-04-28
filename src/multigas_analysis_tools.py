@@ -11,6 +11,7 @@ import numpy as np
 from scipy.stats import linregress
 import pandas as pad
 import matplotlib.pyplot as plt
+import datetime
 try:
     import seaborn
 except:
@@ -22,6 +23,18 @@ def get_raw_data(filepath):
     TODO parameterize
     """
     df = pad.read_csv(filepath, parse_dates=[0,1],index_col=[1])
+    return df
+
+def get_raw_data_xls(filepath, decimal_time_name='Time '):
+    """ open the xls, parse the values and return
+    a pandas Dataframe object
+    TODO parameterize
+    """
+    df = pad.read_excel(filepath, 'Sheet1').dropna()
+    df['Time'] = pad.Series([datetime.timedelta(seconds=t, microseconds=(t-int(t))*1000000) for t in df[decimal_time_name]],
+                                index=df.index)
+    df.set_index(pad.TimedeltaIndex(df['Time']), inplace=True)
+    #df.drop('Time ') # remove the one with trailing whitespace
     return df
 
 def estimate_atmospheric_constant(df, gas, reference='SO2',
@@ -131,12 +144,16 @@ def add_ratio(df, gas_tar, gas_ref, plot_result=True):
     return new_df
 
 
-def plot_acorr(dfcol, maxlags, newfig=False):
+def plot_acorr(dfcol, maxlags, newfig=False, index=None):
     """ plot the autocorrelation function """
     if newfig:
         plt.figure(figsize=(12,8))
-    bins, values,_,_ = plt.acorr(dfcol - dfcol.mean(), maxlags=maxlags, usevlines=False)
+    bins, values,_,_ = plt.acorr(dfcol - dfcol.mean(), maxlags=maxlags, usevlines=False)    
     plt.xlim([0, bins[-1]])
+    plt.grid()
+    if index is not None:
+        xticks = plt.gca().get_xticks()
+        plt.gca().set_xticklabels([str(index[t]) for t in xticks])
 
 
 def harmo_analysis(df, gas_tar, gas_ref, maxlags=1000):
@@ -144,7 +161,7 @@ def harmo_analysis(df, gas_tar, gas_ref, maxlags=1000):
     new_column_name= '%s/%s'%(gas_tar, gas_ref)
     plt.figure(figsize=(12,8))
     plt.subplot(211)                                     
-    plot_acorr(df[new_column_name], maxlags)
+    plot_acorr(df[new_column_name], maxlags, index=df.index)
 
     # ok now cwt
     from scipy import signal
