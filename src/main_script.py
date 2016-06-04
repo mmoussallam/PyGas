@@ -12,7 +12,7 @@ import multigas_analysis_tools as multools
 
 # NOW we need the path to your data
 inputfiledir = 'C:\Users\Manu\workspace\PyGas\datas'
-csvname = 'Sabancaya_For_Python-Script.csv'
+csvname = 'Villarrica_For_Python-Script.csv'
 filepath = os.path.join(inputfiledir, csvname)
 
 # Thus function will read the csv and return a pandas DataFrame object
@@ -29,9 +29,8 @@ gas_tar = 'CO2' # CO2 is the target: we will be interested in the CO2/SO2 ratio
 
 # First we correct the gas value for atmospheric constant
 corrected_data = multools.correct_for_atmo(raw_data, gas_tar, gas_ref,
+                                           minimum_filter=True,
                                            plot_result=True)
-# CO2_offset not negative
-# TODO remove trend
 
 # Now limit the analysis to points where the reference gas is actually measured
 resized_data = multools.limit_to_active_points(corrected_data,
@@ -52,3 +51,6 @@ data_with_ratio = multools.add_ratio(resized_data, gas_tar, gas_ref,
 
 # Finally perform harmonic analysis to find periodicity
 multools.harmo_analysis(data_with_ratio, gas_tar, gas_ref)
+
+# Plotting Gases and Ratios
+multools.ultimate_plot(data_with_ratio, gas_tar, gas_ref)
