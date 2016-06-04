@@ -25,4 +25,4 @@ filepath = os.path.join(inputfiledir, filename)
 	
 df = pd.ExcelFile(filepath).parse('Sheet1')
 
-plt.acorr(df['Temp'],maxlags=1000, usevlines=False)
+plt.acorr(df['Temp'].dropna(),maxlags=10000, usevlines=False)
